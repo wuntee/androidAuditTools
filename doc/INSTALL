@@ -1,0 +1,7 @@
+You will need the following gems:
+trollop
+colored
+
+To install the gems, run the following commands:
+gem install trollop -r
+gem install colored -r
