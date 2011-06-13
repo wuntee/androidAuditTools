@@ -29,6 +29,7 @@ def fileDiff(old, new)
         # Something has changed in the file
         if(newfile.modified != oldfile.modified)
           f = TwoFiles.new(oldfile, newfile)
+          @log.debug("Modified: #{f}")
           @modified.push(f)
         end
         
@@ -37,6 +38,7 @@ def fileDiff(old, new)
     # If we get to here, the file was added
     if(found == false)
       f = TwoFiles.new(nil, newfile)
+      @log.debug("Added: #{f}")
       @added.push(f)
     end
   end
@@ -51,21 +53,28 @@ def fileDiff(old, new)
     end
     if(found == false)
       f = TwoFiles.new(oldfile, nil)
+      @log.debug("Deleted: #{f}")
       @deleted.push(f)
     end
   end
   
 end
 
+@log = Logger.new(STDOUT)
+@log.level = Logger::ERROR
+
 opts = Trollop::options do
   opt :apk, "APK File to install", :type => String
   opt :pause, "Pause after the first scan", :default => false
   opt :adb, "Custom adb command", :default => "adb", :type => String
+  opt :debug, "Debug", :default => false
 end
 
 apk = opts[:apk]
 apk.nil? ? pause = true : pause = opts[:pause]
 AndroidTools.setAdb(opts[:adb])
+opts[:debug] and @log.level = Logger::DEBUG
+opts[:debug] and AndroidTools.setDebug(true) 
 
 start_dir = "/"
 

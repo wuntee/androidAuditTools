@@ -8,22 +8,22 @@ class AndroidFile
     @group = sSplit[2]
     if(@perm.start_with?("-"))
       @is_file = true
-      @size = sSplit[3]
-      @modified = "%s %s" % [sSplit[4], sSplit[5]]
-      @name = sSplit[6]
+      @size = sSplit[3].strip
+      @modified = "%s %s" % [sSplit[4].strip, sSplit[5].strip]
+      @name = sSplit[6].strip
     elsif(@perm.start_with?("d"))
       @is_directory = true
-      @modified = "%s %s" % [sSplit[3], sSplit[4]]
-      @name = sSplit[5]
+      @modified = "%s %s" % [sSplit[3].strip, sSplit[4].strip]
+      @name = sSplit[5].strip
     elsif(@perm.start_with?("l"))
       @is_link = true
-      @modified = "%s %s" % [sSplit[3], sSplit[4]]
-      @name = sSplit[5]
-      @link = sSplit[7]
+      @modified = "%s %s" % [sSplit[3].strip, sSplit[4].strip]
+      @name = sSplit[5].strip
+      @link = sSplit[7].strip
     elsif(@perm.start_with?("c"))
-      @size = "%s %s" % [sSplit[3], sSplit[4]]
-      @modified = "%s %s" % [sSplit[5], sSplit[6]]
-      @name = sSplit[7]
+      @size = "%s %s" % [sSplit[3].strip, sSplit[4].strip]
+      @modified = "%s %s" % [sSplit[5].strip, sSplit[6].strip]
+      @name = sSplit[7].strip
     end
     
     if(root.end_with?("/"))
@@ -31,14 +31,14 @@ class AndroidFile
     else
       @full_path = "%s/%s" % [root, @name]
     end
+    
+    if(@is_directory && !@full_path.end_with?("/"))
+      @full_path = "#{@full_path}/"
+    end
   end
   
   def to_s
-    if(@is_directory && !@full_path.end_with?("/"))
-      return("#{@full_path}/")
-    else
-      return(@full_path)
-    end
+    return(@full_path)
   end
   
   def to_s_full
